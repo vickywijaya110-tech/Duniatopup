@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Horror Magic Wheel - Duniatopup</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#050505;color:#fff;font-family:Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at center,#350909 0,#090202 45%,#000 100%);z-index:-2}
+.wrap{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;overflow:hidden}
+.box{width:min(620px,96vw);text-align:center}
+.brand{font-size:11px;letter-spacing:4px;color:#999}
+h1{font:700 clamp(30px,7vw,55px) Georgia,serif;margin:8px 0;color:#ddd;text-shadow:0 0 18px #a00}
+h1 b{color:#a40000}
+.sub{font-size:12px;letter-spacing:3px;color:#777;margin-bottom:18px}
+.wheel-area{position:relative;width:min(500px,86vw);height:min(500px,86vw);margin:auto}
+#wheel{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;border:6px solid #1d1d1d;
+background:conic-gradient(from -22.5deg,#650909 0 12.5%,#111 12.5% 25%,#480606 25% 37.5%,#171717 37.5% 50%,#700b0b 50% 62.5%,#10201c 62.5% 75%,#360404 75% 87.5%,#242424 87.5% 100%);
+box-shadow:0 0 0 4px #650000,0 0 40px #700000;transition:transform 5s cubic-bezier(.12,.72,.1,1)}
+#wheel:after{content:"";position:absolute;inset:18%;border-radius:50%;border:1px dashed #aaa4}
+.labels{position:absolute;inset:0;pointer-events:none}
+.label{position:absolute;left:50%;top:50%;width:40%;margin-left:-20%;transform-origin:50% 50%;font-size:clamp(9px,2vw,14px);font-weight:900;text-shadow:0 2px 4px #000;line-height:1.1}
+.l0{transform:rotate(0deg) translateY(-185%) rotate(0deg)}
+.l1{transform:rotate(45deg) translateY(-185%) rotate(-45deg)}
+.l2{transform:rotate(90deg) translateY(-185%) rotate(-90deg)}
+.l3{transform:rotate(135deg) translateY(-185%) rotate(-135deg)}
+.l4{transform:rotate(180deg) translateY(-185%) rotate(-180deg)}
+.l5{transform:rotate(225deg) translateY(-185%) rotate(-225deg)}
+.l6{transform:rotate(270deg) translateY(-185%) rotate(-270deg)}
+.l7{transform:rotate(315deg) translateY(-185%) rotate(-315deg)}
+.center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:82px;height:82px;border-radius:50%;
+background:#080808;border:4px solid #aaa;display:flex;align-items:center;justify-content:center;font-weight:900;z-index:3}
+.pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);z-index:5;width:0;height:0;
+border-left:18px solid transparent;border-right:18px solid transparent;border-top:42px solid #eee;filter:drop-shadow(0 0 8px red)}
+button{position:relative;z-index:10;margin-top:25px;padding:16px 32px;border:2px solid #a20b0b;border-radius:4px;
+background:#620707;color:#fff;font-weight:900;font-size:16px;letter-spacing:2px;cursor:pointer;touch-action:manipulation}
+button:active{transform:scale(.97)}
+#result{min-height:28px;margin-top:15px;color:#eee;font-weight:bold}
+.flash{animation:flash .12s 5}
+@keyframes flash{50%{filter:brightness(2.5)}}
+.note{font-size:10px;color:#666;margin-top:5px}
+</style>
+</head>
+<body>
+<div class="wrap" id="screen"><div class="box">
+<div class="brand">DUNIATOPUP × TOPUPGAMING88</div>
+<h1>HORROR <b>MAGIC WHEEL</b></h1>
+<div class="sub">RESIDENT EVIL • STEAM VOUCHER</div>
+
+<div class="wheel-area">
+<div class="pointer"></div>
+<div id="wheel">
+<div class="labels">
+<div class="label l0">STEAM<br>5% OFF</div>
+<div class="label l1">STEAM<br>10% OFF</div>
+<div class="label l2">STEAM<br>15% OFF</div>
+<div class="label l3">STEAM<br>20% OFF</div>
+<div class="label l4">STEAM<br>25% OFF</div>
+<div class="label l5">MYSTERY<br>VOUCHER</div>
+<div class="label l6">TRY<br>AGAIN</div>
+<div class="label l7">LUCKY<br>BONUS</div>
+</div></div>
+<div class="center">SPIN</div>
+</div>
+
+<button type="button" id="spinButton">☠ SPIN SEKARANG</button>
+<div id="result">Berani mencoba keberuntunganmu?</div>
+<div class="note">Voucher diskon Steam • Coming Soon</div>
+</div></div>
+
+<script>
+(function(){
+const wheel=document.getElementById("wheel");
+const button=document.getElementById("spinButton");
+const result=document.getElementById("result");
+const screen=document.getElementById("screen");
+const prizes=["STEAM 5% OFF","STEAM 10% OFF","STEAM 15% OFF","STEAM 20% OFF","STEAM 25% OFF","MYSTERY VOUCHER","TRY AGAIN","LUCKY BONUS"];
+let angle=0,locked=false;
+
+function spin(){
+ if(locked)return;
+ locked=true;
+ button.disabled=true;
+ result.textContent="☠ RODA BERPUTAR...";
+ const winner=Math.floor(Math.random()*prizes.length);
+ const segment=360/prizes.length;
+ const target=360-(winner*segment+segment/2);
+ const current=((angle%360)+360)%360;
+ const delta=((target-current)+360)%360;
+ angle += 360*7 + delta;
+ wheel.style.transform="rotate("+angle+"deg)";
+ setTimeout(function(){
+   result.textContent="🎁 HADIAH: "+prizes[winner];
+   screen.classList.add("flash");
+   setTimeout(()=>screen.classList.remove("flash"),700);
+   locked=false;
+   button.disabled=false;
+ },5200);
+}
+button.addEventListener("click",spin);
+button.addEventListener("touchend",function(e){e.preventDefault();spin()},{passive:false});
+})();
+</script>
+</body>
+</html>
